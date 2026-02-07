@@ -11,9 +11,11 @@
  */
 class Solution {
 public:
+    int helper(TreeNode* node, int cnt){
+        if(node == nullptr) return cnt;
+        else return max(helper(node->left,cnt+1),helper(node->right,cnt+1));
+    }
     int maxDepth(TreeNode* root) {
-        if(root == nullptr) return 0;
-        if(root->left == nullptr && root->right == nullptr) return 1;
-        return max(maxDepth(root->left)+1,maxDepth(root->right)+1);
+        return helper(root,0);
     }
 };
