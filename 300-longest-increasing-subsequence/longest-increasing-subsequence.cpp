@@ -1,18 +1,17 @@
 class Solution {
 public:
+    int helper(int n, int idx, int pre, vector<int>& arr, vector<vector<int>>& dp){
+        if(idx == n) return 0;
+        if(dp[idx][pre+1] != -1) return dp[idx][pre+1];
+        int len = helper(n,idx+1,pre,arr,dp);
+        if(pre == -1 || arr[pre] < arr[idx]){
+            len = max(len,1 + helper(n,idx+1,idx,arr,dp));
+        }
+        return dp[idx][pre+1] = len;
+    }
     int lengthOfLIS(vector<int>& nums) {
-        vector<int> dp(nums.size(), 1);
-        for(int i = 0;i<nums.size();i++){
-            for(int j = 0;j<i;j++){
-                if(nums[j] < nums[i]){
-                    dp[i] = max(dp[i],dp[j]+1);
-                }
-            }
-        }
-        int mx = 0;
-        for(int i = 0;i<dp.size();i++){
-            mx = max(dp[i],mx);
-        }
-        return mx;
+        int n = nums.size();
+        vector<vector<int>> dp(n,vector<int> (n+1,-1));
+        return helper(n,0,-1,nums,dp);
     }
 };
