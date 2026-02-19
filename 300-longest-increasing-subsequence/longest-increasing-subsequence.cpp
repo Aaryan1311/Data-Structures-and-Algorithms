@@ -12,7 +12,10 @@ public:
     }
     int lengthOfLIS(vector<int>& arr) {
         int n = arr.size();
-        vector<vector<int>> dp(n+1,vector<int> (n+1,0));
+        vector<vector<int>> dp(n+1,vector<int> (n+1,-1));
+        for(int i = 0;i<=n;i++){
+            dp[n][i] = 0;
+        }
         for(int idx = n-1;idx>=0;idx--){
             for(int pre = idx-1;pre>=-1;pre--){
                 int pick = 0;
