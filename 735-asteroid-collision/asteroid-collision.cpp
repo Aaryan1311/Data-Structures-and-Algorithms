@@ -4,12 +4,8 @@ public:
         stack<int> stk;
         vector<int> ans;
         int idx = 0;
-        while(idx < arr.size() && arr[idx] < 0) {
-            ans.push_back(arr[idx]);
-            idx++;
-        }
-        // while(idx < arr.size() && arr[idx] > 0) {
-        //     stk.push(arr[idx]);
+        // while(idx < arr.size() && arr[idx] < 0) {
+        //     ans.push_back(arr[idx]);
         //     idx++;
         // }
         for(int i = idx;i<arr.size();i++){
