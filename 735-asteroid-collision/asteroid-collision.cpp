@@ -8,10 +8,10 @@ public:
             ans.push_back(arr[idx]);
             idx++;
         }
-        while(idx < arr.size() && arr[idx] > 0) {
-            stk.push(arr[idx]);
-            idx++;
-        }
+        // while(idx < arr.size() && arr[idx] > 0) {
+        //     stk.push(arr[idx]);
+        //     idx++;
+        // }
         for(int i = idx;i<arr.size();i++){
             if(arr[i] < 0){
                 int ast = abs(arr[i]);
