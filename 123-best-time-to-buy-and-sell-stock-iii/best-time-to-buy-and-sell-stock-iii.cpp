@@ -1,7 +1,7 @@
 class Solution {
 public:
     int maxProfit(vector<int>& prices) {
-        vector<vector<vector<int>>> dp(prices.size()+1, vector<vector<int>> (2, vector<int> (5,0)));
+        vector<vector<vector<int>>> dp(prices.size()+1, vector<vector<int>> (2, vector<int> (3,0)));
         for(int idx = prices.size()-1;idx>=0;idx--){
             for(int can_buy = 0;can_buy < 2;can_buy++){
                 for(int tranc = 0;tranc < 2;tranc++){
