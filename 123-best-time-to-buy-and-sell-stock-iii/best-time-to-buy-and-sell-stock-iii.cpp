@@ -1,26 +1,23 @@
 class Solution {
 public:
-    int helper(int idx,int buy, int cnt, vector<int>& arr, vector<vector<vector<int>>>& dp){
-        if(idx == arr.size()) return 0;
-        if(cnt == 2 && buy == 1){
-            return 0;
-        }
-        if(dp[idx][cnt][buy] != -1) return dp[idx][cnt][buy];
-        int choose = 0;
-        int notchoose = 0;
-        if(buy){
-            choose = helper(idx+1,0,cnt+1,arr,dp) - arr[idx];
-            notchoose = helper(idx+1,buy,cnt,arr,dp);
-        }
-        else{
-            choose = helper(idx+1,1,cnt,arr,dp) + arr[idx];
-            notchoose = helper(idx+1,0,cnt,arr,dp);
-        }
-
-        return dp[idx][cnt][buy] = max(choose,notchoose);
-    }
     int maxProfit(vector<int>& prices) {
-        vector<vector<vector<int>>> dp(prices.size(),vector<vector<int>> (3, vector<int> (2,-1)));
-        return helper(0,1,0,prices,dp);
+        vector<vector<vector<int>>> dp(prices.size()+1, vector<vector<int>> (2, vector<int> (5,0)));
+        for(int idx = prices.size()-1;idx>=0;idx--){
+            for(int can_buy = 0;can_buy < 2;can_buy++){
+                for(int tranc = 0;tranc < 2;tranc++){
+                    int buy = 0;
+                    int leave = 0;
+                    if(can_buy == 0){
+                        buy = dp[idx+1][1-can_buy][tranc+1] + prices[idx];
+                    }
+                    else{
+                        buy = dp[idx+1][1-can_buy][tranc] - prices[idx];
+                    }
+                    leave = dp[idx+1][can_buy][tranc];
+                    dp[idx][can_buy][tranc] = max(buy,leave);
+                }
+            }
+        }
+        return dp[0][1][0];
     }
 };
