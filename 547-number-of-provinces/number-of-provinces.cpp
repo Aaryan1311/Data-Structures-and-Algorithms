@@ -1,21 +1,22 @@
 class Solution {
 public:
-    void dfs(int idx, vector<int>& vis, vector<vector<int>>& adj){
-        vis[idx] = 1;
-        for(int i = 0;i<adj[idx-1].size();i++){
-            if(adj[idx-1][i] == 1 && vis[i+1] == 0){
-                dfs(i+1,vis,adj);
+    void dfs(int x, vector<vector<int>>& arr, vector<int>& vis){
+        vis[x] = 1;
+        for(int i = 0;i<arr[x].size();i++){
+            if(i != x && vis[i] == -1 && arr[x][i] == 1){
+                dfs(i,arr,vis);
             }
         }
+        return;
     }
-    int findCircleNum(vector<vector<int>>& adj) {
-        int n = adj.size();
+    int findCircleNum(vector<vector<int>>& isConnected) {
+        int n = isConnected.size();
+        vector<int> vis(n,-1);
         int cnt = 0;
-        vector<int> vis(n+1,0);
-        for(int i = 1;i<=n;i++){
-            if(vis[i] == 0){
+        for(int i = 0;i<n;i++){
+            if(vis[i] == -1){
+                dfs(i,isConnected,vis);
                 cnt++;
-                dfs(i,vis,adj);
             }
         }
         return cnt;
