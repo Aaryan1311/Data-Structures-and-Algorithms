@@ -1,72 +1,68 @@
 class Solution {
 public:
     int orangesRotting(vector<vector<int>>& grid) {
-        queue<pair<pair<int,int>,int>> q;
-        vector<vector<int>> vis(grid.size(), vector<int>(grid[0].size(),-1));
+        int curr = 0;
+        queue<tuple<int,int,int>> q;
+        vector<vector<int>> vis(grid.size(), vector<int> (grid[0].size(),0));
         for(int i = 0;i<grid.size();i++){
             for(int j = 0;j<grid[0].size();j++){
                 if(grid[i][j] == 2){
-                    pair<int,int> c = {i,j};
-                    pair<pair<int,int>,int> p = {c,0};
-                    q.push(p);
+                    vis[i][j] = 1;
+                    q.push({i,j,0});
                 }
             }
         }
-        int max_time = 0;
         while(!q.empty()){
-            pair<pair<int,int>,int> p = q.front();
-            int curr_time = p.second;
-            int i = p.first.first;
-            int j = p.first.second;
-            //top
-            if(i != 0 && vis[i-1][j] == -1){
-                if(grid[i-1][j] == 1){
-                    pair<int,int> c = {i-1,j};
-                    pair<pair<int,int>,int> p = {c,curr_time+1};
-                    q.push(p);
-                    vis[i-1][j] = 1;
-                    grid[i-1][j] = 2;
-                }
-            }
-            //down
-            if(i != grid.size()-1 && vis[i+1][j] == -1){
-                if(grid[i+1][j] == 1){
-                    pair<int,int> c = {i+1,j};
-                    pair<pair<int,int>,int> p = {c,curr_time+1};
-                    q.push(p);
-                    vis[i+1][j] = 1;
-                    grid[i+1][j] = 2;
-                }
-            }
+            int x,y,time;
+            tie(x,y,time) = q.front();
             //left
-            if(j != 0 && vis[i][j-1] == -1){
-                if(grid[i][j-1] == 1){
-                    pair<int,int> c = {i,j-1};
-                    pair<pair<int,int>,int> p = {c,curr_time+1};
-                    q.push(p);
-                    vis[i][j-1] = 1;
-                    grid[i][j-1] = 2;
+            if(x > 0 && grid[x][y] == 2){
+                if(!vis[x-1][y]){
+                    vis[x-1][y] = 1;
+                    if(grid[x-1][y] == 1){
+                        grid[x-1][y] = 2;
+                        q.push({x-1,y,time+1});
+                    }
                 }
             }
             //right
-            if(j != grid[0].size()-1 && vis[i][j+1] == -1){
-                if(grid[i][j+1] == 1){
-                    pair<int,int> c = {i,j+1};
-                    pair<pair<int,int>,int> p = {c,curr_time+1};
-                    q.push(p);
-                    vis[i][j+1] = 1;
-                    grid[i][j+1] = 2;
+            if(x < grid.size()-1){
+                if(!vis[x+1][y]){
+                    vis[x+1][y] = 1;
+                    if(grid[x+1][y] == 1) {
+                        grid[x+1][y] = 2;
+                        q.push({x+1,y,time+1});
+                    }
                 }
             }
-            max_time =  max(max_time,curr_time);
+            //up
+            if(y > 0){
+                if(!vis[x][y-1]){
+                    vis[x][y-1] = 1;
+                    if(grid[x][y-1] == 1) {
+                        grid[x][y-1] = 2;
+                        q.push({x,y-1,time+1});
+                    }
+                }
+            }
+            //down
+            if(y < grid[0].size()-1){
+                if(!vis[x][y+1]){
+                    vis[x][y+1] = 1;
+                    if(grid[x][y+1] == 1) {
+                        grid[x][y+1] = 2;
+                        q.push({x,y+1,time+1});
+                    }
+                }
+            }
+            curr = max(curr,time);
             q.pop();
         }
-
         for(int i = 0;i<grid.size();i++){
             for(int j = 0;j<grid[0].size();j++){
                 if(grid[i][j] == 1) return -1;
             }
         }
-        return max_time;
+        return curr;
     }
 };
