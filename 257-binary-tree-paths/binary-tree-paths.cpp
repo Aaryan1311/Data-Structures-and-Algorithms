@@ -11,26 +11,22 @@
  */
 class Solution {
 public:
-    vector<string> ans;
-    void helper(TreeNode* node, string s){
-        if(node->left == nullptr && node->right == nullptr){
-            string ss = s + "->" + to_string(node->val);
-            ans.push_back(ss);
+    void dfs(TreeNode* root, string s, vector<string>& ans){
+        if(!root) return;
+        if(s != ""){
+            s += "->";
+        }
+        s += to_string(root->val);
+        if(!root->left && !root->right){
+            ans.push_back(s);
             return;
         }
-        string curr = s + "->" + to_string(node->val);
-        if(node->left != nullptr) helper(node->left,curr);
-        if(node->right != nullptr) helper(node->right,curr);
-        return;
+        dfs(root->left,s,ans);
+        dfs(root->right,s,ans);
     }
     vector<string> binaryTreePaths(TreeNode* root) {
-        if(root->left == nullptr && root->right == nullptr){
-            string ss = to_string(root->val);
-            ans.push_back(ss);
-        }
-        if(root->left != nullptr) helper(root->left,to_string(root->val));
-        if(root->right != nullptr) helper(root->right,to_string(root->val));
-
+        vector<string> ans;
+        dfs(root,"",ans);
         return ans;
     }
 };
