@@ -1,47 +1,47 @@
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode() : val(0), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+ * };
+ */
 class Solution {
 public:
     vector<vector<int>> verticalTraversal(TreeNode* root) {
-        vector<tuple<int,int,int>> nodes;   // col, row, value
+        vector<vector<int>> pq;
         vector<vector<int>> ans;
-        queue<pair<TreeNode*, pair<int,int>>> q;
-
         if(root == nullptr) return ans;
-
-        q.push({root,{0,0}});   // row=0, col=0
-
+        queue<tuple<int,int,TreeNode*>> q;
+        q.push({0,0,root});
         while(!q.empty()){
-            auto p = q.front();
+            int row,col;
+            TreeNode* node;
+            tie(row,col,node) = q.front();
             q.pop();
-
-            TreeNode* node = p.first;
-            int row = p.second.first;
-            int col = p.second.second;
-
-            nodes.push_back({col,row,node->val});
-
-            if(node->left){
-                q.push({node->left, {row+1,col-1}});
+            if(node->left != nullptr){
+                q.push({row+1,col-1,node->left});
             }
-            if(node->right){
-                q.push({node->right, {row+1,col+1}});
+            if(node->right != nullptr){
+                q.push({row+1,col+1,node->right});
             }
+            pq.push_back({col,row,node->val});
         }
+        sort(pq.begin(), pq.end());
+        int colValue = INT_MIN;
 
-        sort(nodes.begin(),nodes.end());
-
-        int prevCol = INT_MIN;
-
-        for(auto &t : nodes) {
-            int col,row,val;
-            tie(col,row,val) = t;
-
-            if(col != prevCol) {
+        for(auto &node : pq){
+            int row, col, val;
+            col = node[0], row = node[1], val = node[2];
+            if(col != colValue){
                 ans.push_back({});
-                prevCol = col;
+                colValue = col;
             }
             ans.back().push_back(val);
         }
-
         return ans;
     }
 };
