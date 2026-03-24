@@ -1,68 +1,57 @@
 class Solution {
 public:
     int orangesRotting(vector<vector<int>>& grid) {
-        int curr = 0;
+        int row = grid.size();
+        int col = grid[0].size();
+        vector<vector<int>> visited(row, vector<int> (col,0));
         queue<tuple<int,int,int>> q;
-        vector<vector<int>> vis(grid.size(), vector<int> (grid[0].size(),0));
-        for(int i = 0;i<grid.size();i++){
-            for(int j = 0;j<grid[0].size();j++){
+        for(int i = 0;i<row;i++){
+            for(int j = 0;j<col;j++){
                 if(grid[i][j] == 2){
-                    vis[i][j] = 1;
+                    visited[i][j] = 1;
                     q.push({i,j,0});
                 }
             }
         }
+        int max_time = 0;
         while(!q.empty()){
-            int x,y,time;
-            tie(x,y,time) = q.front();
-            //left
-            if(x > 0 && grid[x][y] == 2){
-                if(!vis[x-1][y]){
-                    vis[x-1][y] = 1;
-                    if(grid[x-1][y] == 1){
-                        grid[x-1][y] = 2;
-                        q.push({x-1,y,time+1});
-                    }
-                }
+            tuple<int,int,int> t = q.front();
+            int i = get<0>(t);
+            int j = get<1>(t);
+            int time = get<2>(t);
+
+            if(i > 0 && visited[i-1][j]  == 0 && grid[i-1][j] == 1){
+                q.push({i-1,j,time+1});
+                visited[i-1][j] = 1;
+                grid[i-1][j] = 2;
             }
-            //right
-            if(x < grid.size()-1){
-                if(!vis[x+1][y]){
-                    vis[x+1][y] = 1;
-                    if(grid[x+1][y] == 1) {
-                        grid[x+1][y] = 2;
-                        q.push({x+1,y,time+1});
-                    }
-                }
+
+            if(j > 0 && visited[i][j-1]  == 0 && grid[i][j-1] == 1){
+                q.push({i,j-1,time+1});
+                visited[i][j-1] = 1;
+                grid[i][j-1] = 2;
             }
-            //up
-            if(y > 0){
-                if(!vis[x][y-1]){
-                    vis[x][y-1] = 1;
-                    if(grid[x][y-1] == 1) {
-                        grid[x][y-1] = 2;
-                        q.push({x,y-1,time+1});
-                    }
-                }
+
+            if(i < row-1 && visited[i+1][j]  == 0 && grid[i+1][j] == 1){
+                q.push({i+1,j,time+1});
+                visited[i+1][j] = 1;
+                grid[i+1][j] = 2;
             }
-            //down
-            if(y < grid[0].size()-1){
-                if(!vis[x][y+1]){
-                    vis[x][y+1] = 1;
-                    if(grid[x][y+1] == 1) {
-                        grid[x][y+1] = 2;
-                        q.push({x,y+1,time+1});
-                    }
-                }
+
+            if(j < col-1 && visited[i][j+1]  == 0 && grid[i][j+1] == 1){
+                q.push({i,j+1,time+1});
+                visited[i][j+1] = 1;
+                grid[i][j+1] = 2;
             }
-            curr = max(curr,time);
+            max_time = max(time,max_time);
             q.pop();
         }
-        for(int i = 0;i<grid.size();i++){
-            for(int j = 0;j<grid[0].size();j++){
+
+        for(int i = 0;i<row;i++){
+            for(int j = 0;j<col;j++){
                 if(grid[i][j] == 1) return -1;
             }
         }
-        return curr;
+        return max_time;
     }
 };
