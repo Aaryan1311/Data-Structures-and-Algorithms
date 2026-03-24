@@ -1,39 +1,41 @@
 class Solution {
 public:
     vector<vector<int>> floodFill(vector<vector<int>>& image, int sr, int sc, int color) {
-        int ic = image[sr][sc];
-        if(ic == color) return image;
-        queue<pair<int,int>> q;
-        pair<int,int> c = {sr,sc};
-        q.push(c);
+        int colr = image[sr][sc];
+        int row = image.size();
+        int col = image[0].size();
+        vector<vector<int>> vis(row, vector<int> (col, 0));
+        vis[sr][sc] = 1;
         image[sr][sc] = color;
+        queue<pair<int,int>> q;
+        q.push({sr,sc});
         while(!q.empty()){
             pair<int,int> p = q.front();
             int i = p.first;
             int j = p.second;
-            //top
-            if(i != 0 && image[i-1][j] == ic){
-                image[i-1][j] = color;
-                pair<int,int> p = {i-1,j};
-                q.push(p); 
-            }
-            //down
-            if(i != image.size()-1 && image[i+1][j] == ic){
+
+            if(i < row-1 && vis[i+1][j] == 0 && image[i+1][j] == colr){
+                vis[i+1][j] = 1;
                 image[i+1][j] = color;
-                pair<int,int> p = {i+1,j};
-                q.push(p); 
+                q.push({i+1,j});
             }
-            //left
-            if(j != 0 && image[i][j-1] == ic){
-                image[i][j-1] = color;
-                pair<int,int> p = {i,j-1};
-                q.push(p); 
-            }
-            //right
-            if(j != image[0].size()-1 && image[i][j+1] == ic){
+
+            if(j < col-1 && vis[i][j+1] == 0 && image[i][j+1] == colr){
+                vis[i][j+1] = 1;
                 image[i][j+1] = color;
-                pair<int,int> p = {i,j+1};
-                q.push(p); 
+                q.push({i,j+1});
+            }
+
+            if(i > 0 && vis[i-1][j] == 0 && image[i-1][j] == colr){
+                vis[i-1][j] = 1;
+                image[i-1][j] = color;
+                q.push({i-1,j});
+            }
+
+            if(j > 0 && vis[i][j-1] == 0 && image[i][j-1] == colr){
+                vis[i][j-1] = 1;
+                image[i][j-1] = color;
+                q.push({i,j-1});
             }
             q.pop();
         }
