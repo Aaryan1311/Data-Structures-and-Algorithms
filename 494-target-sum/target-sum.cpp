@@ -1,22 +1,17 @@
 class Solution {
 public:
-    int helper(int idx, int sum, int tar, vector<int>& arr, map<pair<int,int>,int>& mp){
-        if(idx == arr.size()){
-            if(sum == tar) return 1;
-            return 0;
-        } 
-        pair<int,int> p = {idx,sum};
-        if(mp.find(p) != mp.end()) return mp[p];
-
-        int add = helper(idx+1,sum + arr[idx], tar, arr,mp);
-        int sub = helper(idx+1,sum - arr[idx],tar,arr,mp);
-
-        int ans = add + sub;
-        mp[p] = ans;
-        return ans;
+    int helper(int idx, int sum, int tar, int off, vector<int>& nums, vector<vector<int>>& dp){
+        if(sum == tar && idx == nums.size()) return 1;
+        if(idx == nums.size()) return 0;
+        if(dp[idx][sum+off] != -1) return dp[idx][sum+off];
+        int plus = helper(idx+1,sum+nums[idx],tar,off,nums,dp);
+        int minus = helper(idx+1,sum-nums[idx],tar,off,nums,dp);
+        return dp[idx][sum+off] = plus+minus;
     }
     int findTargetSumWays(vector<int>& nums, int target) {
-        map<pair<int,int>,int> mp;
-        return helper(0,0,target,nums,mp);
+        int sum = 0;
+        for(int i : nums) sum += i;
+        vector<vector<int>> dp(nums.size()+1, vector<int> (2*sum+1,-1));
+        return helper(0,0,target,sum,nums,dp);
     }
 };
