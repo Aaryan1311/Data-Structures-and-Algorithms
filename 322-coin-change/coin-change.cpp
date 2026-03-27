@@ -1,32 +1,19 @@
-typedef long long int ll;
 class Solution {
 public:
-    ll helper(int idx, ll sum, ll tar, vector<int>& arr, vector<vector<ll>>& dp){
-        if(idx == arr.size()){
-            if(sum == tar) return 0;
-            return INT_MIN;
+    int helper(int idx, int curr, int amount, vector<int>& arr, vector<vector<int>>& dp){
+        if(curr == amount) return 0;
+        if(idx == arr.size() || curr > amount) return 100000;
+        if(dp[idx][curr] != -1) return dp[idx][curr];
+        int choose = 100000;
+        int not_choose = helper(idx+1,curr,amount,arr,dp);
+        if(arr[idx] <= amount && curr + arr[idx] <= amount){
+            choose = helper(idx,curr+arr[idx], amount, arr, dp) + 1;
         }
-        if(dp[idx][sum] != -1) return dp[idx][sum];
-        ll choose = 1000000;
-        if(sum + arr[idx] <= tar) choose = helper(idx,sum+arr[idx], tar, arr, dp) + 1;
-        ll notchoose = helper(idx+1,sum,tar,arr,dp);
-        if(choose < 0 && notchoose < 0){
-            dp[idx][sum] = INT_MIN;
-            return choose;
-        }
-        else if(choose < 0){
-            dp[idx][sum] = notchoose;
-            return notchoose;
-        }
-        else if(notchoose < 0){
-            dp[idx][sum] = choose;
-            return choose;
-        }
-        return dp[idx][sum] = min(choose,notchoose); 
+        return dp[idx][curr] = min(choose, not_choose);
     }
     int coinChange(vector<int>& coins, int amount) {
-        vector<vector<ll>> dp(coins.size(), vector<ll> (amount+1,-1));
-        int ans =  (int)(helper(0,0,amount,coins,dp));
-        return ans >= 1000000 ? -1 : ans;
+        vector<vector<int>> dp(coins.size(), vector<int> (amount+1, -1));
+        int ans = helper(0,0,amount,coins,dp);
+        return ans >= 100000 ? -1 : ans;
     }
 };
