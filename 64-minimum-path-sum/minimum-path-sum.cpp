@@ -1,19 +1,21 @@
 class Solution {
 public:
-    int helper(int x, int y, vector<vector<int>>& arr, vector<vector<int>>& dp){
-        if(x == arr.size() -1 && y == arr[0].size()-1) return arr[x][y];
-        if(dp[x][y] != -1) return dp[x][y];
-        
-        int down = 50000;
-        int right = 50000;
-
-        if(x != arr.size()-1) down = helper(x+1,y,arr,dp) + arr[x][y];
-        if(y != arr[0].size()-1) right = helper(x,y+1,arr,dp) + arr[x][y];
-
-        return dp[x][y] = min(down,right);
+    int helper(int i, int j, int m, int n, vector<vector<int>>& grid, vector<vector<int>>& dp){
+        if(i == m-1 && j == n-1) return grid[i][j];
+        if(dp[i][j] != -1) return dp[i][j];
+        int right = INT_MAX, down = INT_MAX;
+        if(i < m-1){
+            down = helper(i+1,j,m,n,grid,dp) + grid[i][j];
+        }
+        if(j < n-1){
+            right = helper(i,j+1,m,n,grid,dp) + grid[i][j];
+        }
+        return dp[i][j] = min(down,right);
     }
-    int minPathSum(vector<vector<int>>& grid) {
-        vector<vector<int>> dp(grid.size(), vector<int>  (grid[0].size(),-1));
-        return helper(0,0,grid,dp);
+    int minPathSum(vector<vector<int>>& arr) {
+        int m = arr.size();
+        int n = arr[0].size();
+        vector<vector<int>> dp(m+1, vector<int> (n+1, -1));
+        return helper(0,0,m,n,arr,dp);
     }
 };
