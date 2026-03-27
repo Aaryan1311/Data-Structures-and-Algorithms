@@ -1,22 +1,17 @@
 class Solution {
 public:
-    int rob(vector<int>& arr) {
-        int n = arr.size();
-        if(n == 1) return arr[0];
-        vector<int> dp(n+1,-1);
-        dp[0] = arr[0];
-        dp[1] = max(arr[0],arr[1]);
-        for(int i = 2;i<n;i++){
-            int one = 0;
-            int two = 0;
-            if(i >= 2){
-                one = dp[i-2] + arr[i];
-            }
-            if(i >= 3){
-                two = dp[i-3] + arr[i];
-            }
-            dp[i] = max(one,two);
+    int helper(int idx, int can, vector<int>& nums, vector<vector<int>>& dp){
+        if(idx == nums.size()) return 0;
+        if(dp[idx][can] != -1) return dp[idx][can];
+        int pick = 0;
+        int not_pick = helper(idx+1,1,nums,dp);
+        if(can){
+            pick = helper(idx+1,0,nums,dp) + nums[idx];
         }
-    return max(dp[n-1],dp[n-2]);
+        return dp[idx][can] = max(pick,not_pick);
+    }
+    int rob(vector<int>& nums) {
+        vector<vector<int>> dp(nums.size(), vector<int> (2,-1));
+        return helper(0,1,nums,dp);
     }
 };
