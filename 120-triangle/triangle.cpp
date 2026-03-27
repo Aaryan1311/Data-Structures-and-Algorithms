@@ -1,19 +1,18 @@
 class Solution {
 public:
-    int helper(int idx, int subidx, vector<vector<int>>& arr, vector<vector<int>>& dp){
-        if(idx == arr.size()-1) return arr[idx][subidx];
-        if(dp[idx][subidx] != -1) return dp[idx][subidx];
+    int minimumTotal(vector<vector<int>>& arr) {
+        int n = arr.size();
+        
+        // Take last row as initial DP
+        vector<int> dp = arr[n-1];
 
-        int same = 3000000;
-        int next = 3000000;
+        // Bottom-up
+        for(int i = n-2; i >= 0; i--){
+            for(int j = 0; j <= i; j++){
+                dp[j] = arr[i][j] + min(dp[j], dp[j+1]);
+            }
+        }
 
-        same = helper(idx+1,subidx,arr,dp) + arr[idx][subidx];
-        next = helper(idx+1,subidx+1,arr,dp) + arr[idx][subidx];
-
-        return dp[idx][subidx] = min(same,next);
-    }
-    int minimumTotal(vector<vector<int>>& triangle) {
-        vector<vector<int>> dp(triangle.size(), vector<int> (triangle[triangle.size()-1].size(),-1));
-        return helper(0,0,triangle,dp);
+        return dp[0];
     }
 };
