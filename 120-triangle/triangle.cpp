@@ -1,18 +1,17 @@
 class Solution {
 public:
-    int minimumTotal(vector<vector<int>>& arr) {
-        int n = arr.size();
-        
-        // Take last row as initial DP
-        vector<int> dp = arr[n-1];
+int minimumTotal(vector<vector<int>>& triangle) {
+    for (int i = triangle.size() - 2; i >= 0; i--) {
+        for (int j = 0; j < triangle[i].size(); j++) {
 
-        // Bottom-up
-        for(int i = n-2; i >= 0; i--){
-            for(int j = 0; j <= i; j++){
-                dp[j] = arr[i][j] + min(dp[j], dp[j+1]);
-            }
+            int below = triangle[i + 1][j];
+            int belowRight = triangle[i + 1][j + 1];
+
+            triangle[i][j] += min(below, belowRight);
+
         }
-
-        return dp[0];
     }
+
+    return triangle[0][0];
+}
 };
